@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 public class SignInPanel extends JPanel {
     private MainFrame mainFrame;
@@ -12,7 +14,7 @@ public class SignInPanel extends JPanel {
         // Tiêu đề
         JLabel title = new JLabel("ĐĂNG KÝ TÀI KHOẢN");
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        title.setBounds(80, 50, 300, 40); // Căn chỉnh cho đều
+        title.setBounds(80, 50, 300, 40);
         this.add(title);
 
         // Full Name
@@ -60,7 +62,6 @@ public class SignInPanel extends JPanel {
         this.add(SITPass);
 
         
-
         // Nút Đăng ký
         JButton DangKyBtn = new JButton("Đăng Ký Ngay");
         DangKyBtn.setBackground(Color.WHITE);
@@ -70,25 +71,66 @@ public class SignInPanel extends JPanel {
         this.add(DangKyBtn);
 
         DangKyBtn.addActionListener(e -> {
-            String user = SITName.getText().trim();
-            String pass = new String(MatkhauField.getPassword()).trim();
-        );
+            // Lấy dữ liệu
+            String user = SITUser.getText().trim();
+            String name = SITName.getText().trim();
+            String email = SITEmail.getText().trim();
+            String pass = new String(SITPass.getPassword()).trim();
 
-        // Nút Quay lại
-        JButton btnBack = new JButton("<< Quay lại Đăng Nhập");
-        btnBack.setFont(new Font("Segoe UI", Font.ITALIC, 12));
-        btnBack.setBorderPainted(false);
-        btnBack.setContentAreaFilled(false);
-        btnBack.setForeground(Color.BLUE);
-        btnBack.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnBack.setBounds(95, 490, 200, 30);
-        this.add(btnBack);
+            // Kiểm tra
+            if (user.isEmpty() || email.isEmpty() || name.isEmpty() || pass.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-        // --- Logic ---
-        btnBack.addActionListener(e -> mainFrame.showLoginPanel());
-        
-        DangKyBtn.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Thực hiện lệnh INSERT vào DB tại đây");
+            // Gọi Database
+            dbConnect db = new dbConnect();
+            try (Connection conn = db.getConnection()) {
+                if (conn == null) {
+                    JOptionPane.showMessageDialog(this, "Lỗi kết nối Database!");
+                    return;
+                }
+
+                // Kiểm tra xem username đã tồn tại chưa
+                String checkSql = "SELECT username FROM user WHERE username = ?";
+                try (PreparedStatement psCheck = conn.prepareStatement(checkSql)) {
+                    psCheck.setString(1, user);
+                    if (psCheck.executeQuery().next()) {
+                        JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại!", "Lỗi", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                }
+
+                // INSERT
+                String insertSql = "INSERT INTO user (username, email, full_name, password) VALUES (?, ?, ?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(insertSql)) {
+                    ps.setString(1, user);
+                    ps.setString(2, email);
+                    ps.setString(3, name);
+                    ps.setString(4, pass); 
+                    // Thực thi lệnh nhập vào database
+                    int row = ps.executeUpdate(); 
+                    if (row > 0) {
+                        JOptionPane.showMessageDialog(this, "Đăng ký thành công! Vui lòng đăng nhập.");
+                        
+                        // Xóa trắng các ô nhập liệu
+                        SITUser.setText("");
+                        SITEmail.setText("");
+                        SITName.setText("");
+                        SITPass.setText("");
+
+                        // Chuyển về màn hình đăng nhập
+                        mainFrame.showLoginPanel();
+                    }
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Lỗi Database: " + ex.getMessage());
+            }
         });
+    
+        
+
     }
 }
