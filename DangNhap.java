@@ -58,6 +58,10 @@ public class DangNhap {
         // Đặt tên cửa sổ
         DNFrame.setTitle("Hanabi");
 
+        // Đặt Icon cửa sổ
+        ImageIcon icon = new ImageIcon(getClass().getResource("/ImageFile/HanabiIcon.png"));
+        DNFrame.setIconImage(icon.getImage());
+
         // Đóng ứng dụng khi cửa sổ được đóng
         DNFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 
@@ -286,11 +290,11 @@ public class DangNhap {
         
 
     // Nút đăng ký
-        JButton DangKyBtn = new JButton("");
+        JButton DangKyBtn = new JButton("Đăng Ký");
         DangKyBtn.setBackground(Color.WHITE);
         DangKyBtn.setForeground(Color.BLACK);
         DangKyBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        DangKyBtn.setBounds(220, 400, 100, 40);
+        DangKyBtn.setBounds(200, 400, 100, 40);
         DangKyBtn.setBorder(new RoundedBorder(20));
         rightPanel.add(DangKyBtn);
 
