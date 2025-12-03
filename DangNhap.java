@@ -266,7 +266,7 @@ public class DangNhap {
 
 
     // box tick
-        JCheckBox CheckBox = new JCheckBox("Tôi Đồng Tình với điều khoảng");
+        JCheckBox CheckBox = new JCheckBox("Tôi Đồng Tình với điều khoản");
         CheckBox.setFont(new Font("Segoe UI", Font.BOLD, 13));
         CheckBox.setBackground(Color.WHITE);
         CheckBox.setBounds(70, 360, 250, 25);
