@@ -4,6 +4,10 @@ import javax.swing.border.Border;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 class RoundedBorder implements Border {
     private int radius;
@@ -298,7 +302,60 @@ public class DangNhap {
         DangKyBtn.setBorder(new RoundedBorder(20));
         rightPanel.add(DangKyBtn);
 
+        DangNhapBtn.addActionListener(e -> {
+            String user = TaikhoanField.getText().trim();
+            String pass = new String(MatkhauField.getPassword()).trim();
 
+            // Xử lý loại bỏ Placeholder
+            if (user.equals("Nhập tài khoản hoặc email"))  user = "";
+            if (pass.equals("123456789")) pass = "";
+
+            if (user.isEmpty() || pass.isEmpty()) {
+                // SỬA LỖI: Dùng DNFrame thay vì this
+                JOptionPane.showMessageDialog(DNFrame, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!CheckBox.isSelected()) {
+                JOptionPane.showMessageDialog(DNFrame, "Vui lòng đồng ý điều khoản!", "Lỗi", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Kết nối DB
+            dbConnect db = new dbConnect();
+            try (Connection conn = db.getConnection()) {
+                if (conn == null) {
+                    JOptionPane.showMessageDialog(DNFrame, "Không thể kết nối Database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                String sql = "SELECT * FROM user WHERE (username = ? OR email = ?) AND password = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, user);
+                    ps.setString(2, user);
+                    ps.setString(3, pass);
+
+
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            String fullName = rs.getString("full_name");
+                            JOptionPane.showMessageDialog(DNFrame, "Đăng nhập thành công!\nXin chào " + (fullName != null ? fullName : user));
+                            
+                            // Mở màn hình chính
+
+
+                            DNFrame.dispose(); 
+                        } else {
+                            JOptionPane.showMessageDialog(DNFrame, "Sai username hoặc password!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(DNFrame, "Lỗi kết nối CSDL:\n" + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        
 
     // Gắn các panel vào khung chính
         DNFrame.add(leftPanel, BorderLayout.WEST);
