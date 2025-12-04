@@ -178,6 +178,7 @@ public class LoginPanel extends JPanel {
                             JOptionPane.showMessageDialog(this, "Đăng nhập thành công!\nXin chào " + (fullName != null ? fullName : user));
                             
                             // Mở màn hình chính
+                        
 
                             this.mainFrame.dispose(); 
                         } else {
@@ -190,6 +191,6 @@ public class LoginPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Lỗi kết nối CSDL:\n" + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         });
-        DangKyBtn.addActionListener(e -> mainFrame.showRegisterPanel());
+        DangKyBtn.addActionListener(e -> mainFrame.showSignInPanel());
 }
 }

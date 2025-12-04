@@ -2,8 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    
-    private JPanel rightContainer; // Panel chứa Login và SignIn
+    // Panel chứa Login và SignIn
+    private JPanel rightContainer; 
     private LoginPanel loginPanel;
     private SignInPanel signInPanel;
 
@@ -14,7 +14,6 @@ public class MainFrame extends JFrame {
         });
     }
     public MainFrame() {
-        // Cài đặt cơ bản
         this.setTitle("Hanabi Cafe");
         this.setSize(1000, 600);
         ImageIcon icon = new ImageIcon(getClass().getResource("/ImageFile/HanabiIcon.png"));
@@ -38,15 +37,15 @@ public class MainFrame extends JFrame {
 
         // Thêm vào container
         rightContainer.add(loginPanel, "LOGIN");
-        rightContainer.add(signInPanel, "REGISTER");
+        rightContainer.add(signInPanel, "SIGNIN");
 
         this.add(rightContainer, BorderLayout.CENTER);
     }
 
     // Hàm chuyển sang Đăng Ký
-    public void showRegisterPanel() {
+    public void showSignInPanel() {
         CardLayout cl = (CardLayout) rightContainer.getLayout();
-        cl.show(rightContainer, "REGISTER");
+        cl.show(rightContainer, "SIGNIN");
     }
 
     // Hàm chuyển về Đăng Nhập
