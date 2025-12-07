@@ -1,14 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class MenuFrame extends JFrame {
+public class ManageFrame extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            MenuFrame frame = new MenuFrame();
+            ManageFrame frame = new ManageFrame();
             frame.setVisible(true);
         });
     }
-    public MenuFrame(){
+    public ManageFrame(){
         this.setTitle("Menu");
         this.setSize(1200, 600);
         ImageIcon icon = new ImageIcon(getClass().getResource("/ImageFile/HanabiIcon.png"));
@@ -22,9 +22,9 @@ public class MenuFrame extends JFrame {
 
         // 2 Panel con
         MenuPanel menuPanel = new MenuPanel();   
-        PricePanel pricePanel = new PricePanel(); 
+        PersonPanel pricePanel = new PersonPanel(); 
 
-        mainContainer.add(menuPanel, BorderLayout.CENTER); 
+        mainContainer.add(menuPanel, BorderLayout.WEST); 
         mainContainer.add(pricePanel, BorderLayout.EAST);
 
         this.add(mainContainer);

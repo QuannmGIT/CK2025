@@ -179,7 +179,7 @@ public class LoginPanel extends JPanel {
                             JOptionPane.showMessageDialog(this, "Đăng nhập thành công!\nXin chào " + (fullName != null ? fullName : user));
                             
                             // Mở màn hình MenuFrame
-                            new MenuFrame().setVisible(true);                            
+                            new ManageFrame().setVisible(true);                            
 
                             this.mainFrame.dispose(); 
                         } else {
