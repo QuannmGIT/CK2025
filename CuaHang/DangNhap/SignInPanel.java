@@ -13,13 +13,13 @@ public class SignInPanel extends JPanel {
 
         // Tiêu đề
         JLabel title = new JLabel("ĐĂNG KÝ TÀI KHOẢN");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        title.setFont(new Font("HelveticaNeue", Font.BOLD, 22));
         title.setBounds(80, 50, 300, 40);
         this.add(title);
 
         // Full Name
         JLabel SILName = new JLabel("Họ và tên:");
-        SILName.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        SILName.setFont(new Font("HelveticaNeue", Font.BOLD, 18));
         SILName.setBounds(150, 100, 150, 30); 
         this.add(SILName);
 
@@ -30,7 +30,7 @@ public class SignInPanel extends JPanel {
 
         // Username
         JLabel SILUser = new JLabel("Tên đăng nhập:");
-        SILUser.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        SILUser.setFont(new Font("HelveticaNeue", Font.BOLD, 18));
         SILUser.setBounds(130, 180, 150, 30);
         this.add(SILUser);
         
@@ -41,7 +41,7 @@ public class SignInPanel extends JPanel {
 
         // Email
         JLabel SILEmail = new JLabel("Email:");
-        SILEmail.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        SILEmail.setFont(new Font("HelveticaNeue", Font.BOLD, 18));
         SILEmail.setBounds(165, 260, 150, 30);
         this.add(SILEmail);
         
@@ -52,7 +52,7 @@ public class SignInPanel extends JPanel {
 
         // Password
         JLabel SILPass = new JLabel("Mật khẩu:");
-        SILPass.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        SILPass.setFont(new Font("HelveticaNeue", Font.BOLD, 18));
         SILPass.setBounds(150, 340, 150, 30);
         this.add(SILPass);
         
@@ -66,12 +66,13 @@ public class SignInPanel extends JPanel {
         JButton DangKyBtn = new JButton("Đăng Ký Ngay");
         DangKyBtn.setBackground(Color.WHITE);
         DangKyBtn.setForeground(Color.BLACK);
-        DangKyBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        DangKyBtn.setFont(new Font("HelveticaNeue", Font.BOLD, 14));
         DangKyBtn.setBounds(70, 440, 250, 40);
         this.add(DangKyBtn);
 
         DangKyBtn.addActionListener(e -> {
             // Lấy dữ liệu
+            String user_id = new String().trim();
             String user = SITUser.getText().trim();
             String name = SITName.getText().trim();
             String email = SITEmail.getText().trim();
@@ -92,7 +93,7 @@ public class SignInPanel extends JPanel {
                 }
 
                 // Kiểm tra xem username đã tồn tại chưa
-                String checkSql = "SELECT username FROM user WHERE username = ?";
+                String checkSql = "SELECT username FROM users WHERE username = ?";
                 try (PreparedStatement psCheck = conn.prepareStatement(checkSql)) {
                     psCheck.setString(1, user);
                     if (psCheck.executeQuery().next()) {
@@ -102,15 +103,22 @@ public class SignInPanel extends JPanel {
                 }
 
                 // INSERT
-                String insertSql = "INSERT INTO user (username, email, full_name, password) VALUES (?, ?, ?, ?)";
-                try (PreparedStatement ps = conn.prepareStatement(insertSql)) {
+                String insertSql = "INSERT INTO users (username, email, full_name, password) VALUES (?, ?, ?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
                     ps.setString(1, user);
                     ps.setString(2, email);
                     ps.setString(3, name);
                     ps.setString(4, pass); 
-                    // Thực thi lệnh nhập vào database
+                    // Nhập vào database
                     int row = ps.executeUpdate(); 
                     if (row > 0) {
+                        // user_id
+                        try (var rs = ps.getGeneratedKeys()) {
+                            if (rs.next()) {
+                                user_id = String.valueOf(rs.getInt(1));
+                            }
+                        }
+                        
                         JOptionPane.showMessageDialog(this, "Đăng ký thành công! Vui lòng đăng nhập.");
                         
                         // Xóa trắng các ô nhập liệu
@@ -119,8 +127,14 @@ public class SignInPanel extends JPanel {
                         SITName.setText("");
                         SITPass.setText("");
 
-                        // Chuyển về màn hình đăng nhập
-                        mainFrame.showLoginPanel();
+                        // Insert order for new user
+                        String updateSql = "INSERT INTO average (user_id) VALUES (?)";
+                        try (PreparedStatement psupdate = conn.prepareStatement(updateSql)) {
+                            psupdate.setString(1, user_id);
+                            psupdate.executeUpdate();
+                        }
+
+                        mainFrame.dispose();
                     }
                 }
 
@@ -129,7 +143,5 @@ public class SignInPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Lỗi Database: " + ex.getMessage());
             }
         });
-    
-  
     }
 }

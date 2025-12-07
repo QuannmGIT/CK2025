@@ -102,8 +102,9 @@ public class LoginPanel extends JPanel {
 
 
     // box tick
-        JCheckBox CheckBox = new JCheckBox("Tôi Đồng Tình với điều khoản");
-        CheckBox.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        JCheckBox CheckBox = new JCheckBox("Tôi Đồng Ý với điều khoản");
+        CheckBox.setFocusable(false);
+        CheckBox.setFont(new Font("HelveticaNeue", Font.BOLD, 13));        
         CheckBox.setBackground(Color.WHITE);
         CheckBox.setBounds(70, 360, 250, 25);
         this.add(CheckBox);
@@ -165,7 +166,7 @@ public class LoginPanel extends JPanel {
                     return;
                 }
 
-                String sql = "SELECT * FROM user WHERE (username = ? OR email = ?) AND password = ?";
+                String sql = "SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?";
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
                     ps.setString(1, user);
                     ps.setString(2, user);
@@ -177,8 +178,8 @@ public class LoginPanel extends JPanel {
                             String fullName = rs.getString("full_name");
                             JOptionPane.showMessageDialog(this, "Đăng nhập thành công!\nXin chào " + (fullName != null ? fullName : user));
                             
-                            // Mở màn hình chính
-                        
+                            // Mở màn hình MenuFrame
+                            new MenuFrame().setVisible(true);                            
 
                             this.mainFrame.dispose(); 
                         } else {

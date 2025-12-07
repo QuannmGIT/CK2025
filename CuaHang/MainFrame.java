@@ -21,12 +21,14 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setLayout(new BorderLayout());
 
+        JPanel allJPanel = new JPanel();
+        this.add(allJPanel);
+        allJPanel.setLayout(new BorderLayout());
+        allJPanel.setBackground(Color.WHITE);
 
         BannerPanel banner = new BannerPanel();
-        this.add(banner, BorderLayout.WEST);
-
+        allJPanel.add(banner, BorderLayout.WEST);
 
         rightContainer = new JPanel();
         rightContainer.setLayout(new CardLayout()); 
@@ -39,7 +41,8 @@ public class MainFrame extends JFrame {
         rightContainer.add(loginPanel, "LOGIN");
         rightContainer.add(signInPanel, "SIGNIN");
 
-        this.add(rightContainer, BorderLayout.CENTER);
+        allJPanel.add(rightContainer, BorderLayout.CENTER);
+
     }
 
     // Hàm chuyển sang Đăng Ký
@@ -48,9 +51,7 @@ public class MainFrame extends JFrame {
         cl.show(rightContainer, "SIGNIN");
     }
 
-    // Hàm chuyển về Đăng Nhập
-    public void showLoginPanel() {
-        CardLayout cl = (CardLayout) rightContainer.getLayout();
-        cl.show(rightContainer, "LOGIN");
-    }
+    // vao menu
+
+
 }

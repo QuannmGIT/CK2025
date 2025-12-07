@@ -7,11 +7,12 @@ public class FontLoader {
         try {
             File fontFile = new File(path);
             Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(size);
-            return font;
+            return font;                                                                                                                            
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
             // Trả về font mặc định
-            return new Font("Segoe UI", Font.BOLD, (int) size);
+            return FontLoader.load("Fonts/HelveticaNeue.ttf", (int) size);
         }
+        
     }
 }
