@@ -123,21 +123,14 @@ public class LoginPanel extends JPanel {
 
     // Nút đăng nhập
         JButton DangNhapBtn = new JButton("Đăng Nhập");
+        DangNhapBtn.setFocusable(false);
         DangNhapBtn.setBackground(Color.WHITE);
         DangNhapBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        DangNhapBtn.setBounds(70, 400, 100, 40);
+        DangNhapBtn.setBounds(70, 400, 250, 40);
         DangNhapBtn.setBorder(new RoundedBorder(20));
         this.add(DangNhapBtn);
         
 
-    // Nút đăng ký
-        JButton DangKyBtn = new JButton("Đăng Ký");
-        DangKyBtn.setBackground(Color.WHITE);
-        DangKyBtn.setForeground(Color.BLACK);
-        DangKyBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        DangKyBtn.setBounds(200, 400, 100, 40);
-        DangKyBtn.setBorder(new RoundedBorder(20));
-        this.add(DangKyBtn);
 
         DangNhapBtn.addActionListener(e -> {
             String user = TaikhoanField.getText().trim();
@@ -175,11 +168,13 @@ public class LoginPanel extends JPanel {
 
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
+                            // Lấy đúng cột 'username' từ database
+                            String userDB = rs.getString("username"); 
                             String fullName = rs.getString("full_name");
-                            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!\nXin chào " + (fullName != null ? fullName : user));
-                            
+
+                            JOptionPane.showMessageDialog(this, "Xin chào " + fullName);
                             // Mở màn hình MenuFrame
-                            new ManageFrame().setVisible(true);                            
+                            new ManageFrame(userDB).setVisible(true);
 
                             this.mainFrame.dispose(); 
                         } else {
@@ -192,6 +187,6 @@ public class LoginPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Lỗi kết nối CSDL:\n" + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         });
-        DangKyBtn.addActionListener(e -> mainFrame.showSignInPanel());
+
 }
 }

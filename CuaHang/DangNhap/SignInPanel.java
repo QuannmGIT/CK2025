@@ -4,13 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class SignInPanel extends JPanel {
-    private MainFrame mainFrame;
 
     public SignInPanel(MainFrame frame) {
-        this.mainFrame = frame;
-        this.setBackground(Color.WHITE);
         this.setLayout(null);
-
         // Tiêu đề
         JLabel title = new JLabel("ĐĂNG KÝ TÀI KHOẢN");
         title.setFont(new Font("HelveticaNeue", Font.BOLD, 22));
@@ -134,7 +130,6 @@ public class SignInPanel extends JPanel {
                             psupdate.executeUpdate();
                         }
 
-                        mainFrame.dispose();
                     }
                 }
 

@@ -54,7 +54,6 @@ public class BannerPanel extends JPanel {
         textPanel.add(Box.createVerticalGlue()); 
         
         textPanel.add(textLabel);
-        // Cách dòng
         textPanel.add(Box.createRigidArea(new Dimension(0, 40))); 
         textPanel.add(textLabel2);
         textPanel.add(Box.createRigidArea(new Dimension(0, 10))); 
@@ -65,7 +64,7 @@ public class BannerPanel extends JPanel {
         textPanel.add(Box.createRigidArea(new Dimension(0, 280)));
         textPanel.add(Box.createVerticalGlue());
  
-
+        
         imagePanel.add(textPanel); 
         imagePanel.add(imageLabel);
         

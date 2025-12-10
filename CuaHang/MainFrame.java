@@ -2,10 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    // Panel chứa Login và SignIn
     private JPanel rightContainer; 
     private LoginPanel loginPanel;
-    private SignInPanel signInPanel;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -33,13 +31,10 @@ public class MainFrame extends JFrame {
         rightContainer = new JPanel();
         rightContainer.setLayout(new CardLayout()); 
 
-        // 2 panel con
         loginPanel = new LoginPanel(this);
-        signInPanel = new SignInPanel(this);
 
         // Thêm vào container
         rightContainer.add(loginPanel, "LOGIN");
-        rightContainer.add(signInPanel, "SIGNIN");
 
         allJPanel.add(rightContainer, BorderLayout.CENTER);
 
