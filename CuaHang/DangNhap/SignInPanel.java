@@ -1,86 +1,138 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class SignInPanel extends JPanel {
 
-    public SignInPanel(MainFrame frame) {
+    private ManageFrame frame; // Tham chiếu để quay lại
+
+    public SignInPanel(ManageFrame frame) {
+        this.frame = frame;
         this.setLayout(null);
-        // Tiêu đề
-        JLabel title = new JLabel("ĐĂNG KÝ TÀI KHOẢN");
-        title.setFont(new Font("HelveticaNeue", Font.BOLD, 22));
-        title.setBounds(80, 50, 300, 40);
-        this.add(title);
+        this.setBackground(Color.WHITE); // Nền trắng giống PersonPanel
 
-        // Full Name
-        JLabel SILName = new JLabel("Họ và tên:");
-        SILName.setFont(new Font("HelveticaNeue", Font.BOLD, 18));
-        SILName.setBounds(150, 100, 150, 30); 
-        this.add(SILName);
+        // --- 1. TIÊU ĐỀ ---
+        JLabel lblTitle = new JLabel("Đăng ký thành viên");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        lblTitle.setBounds(40, 20, 300, 40);
+        this.add(lblTitle);
 
-        JTextField SITName = new JTextField();
-        SITName.setBounds(70, 135, 250, 35);
-        SITName.setBorder(new RoundedBorder(10));
-        this.add(SITName);        
+        // --- 2. KHUNG CHỨA (Container Box) ---
+        JPanel formPanel = new JPanel(null);
+        formPanel.setBackground(Color.WHITE);
+        formPanel.setBounds(40, 80, 550, 420); // Kích thước khung
+        formPanel.setBorder(new LineBorder(Color.BLACK, 1)); // Viền đen mỏng
+        this.add(formPanel);
+
+        // --- 3. ICON (Trang trí cho giống PersonPanel) ---
+        JLabel lblIcon = new JLabel();
+        lblIcon.setBounds(225, 20, 100, 100); // Căn giữa khung
+        lblIcon.setHorizontalAlignment(SwingConstants.CENTER);
+        // Thử load ảnh, nếu không có thì bỏ qua
+        try {
+            ImageIcon icon = new ImageIcon(getClass().getResource("/ImageFile/PersonIcon.png")); // Dùng lại icon person hoặc icon khác
+            Image img = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+            lblIcon.setIcon(new ImageIcon(img));
+        } catch (Exception e) {
+            lblIcon.setText("NEW USER");
+            lblIcon.setBorder(new LineBorder(Color.GRAY));
+        }
+        formPanel.add(lblIcon);
+
+
+        Font labelFont = new Font("Segoe UI", Font.BOLD, 16);
+        Font textFont = new Font("Segoe UI", Font.PLAIN, 14);
+
+        // Họ tên
+        JLabel lblName = new JLabel("Họ và tên:");
+        lblName.setFont(labelFont);
+        lblName.setBounds(50, 140, 100, 30);
+        formPanel.add(lblName);
+
+        JTextField txtName = new JTextField();
+        txtName.setFont(textFont);
+        txtName.setBounds(160, 140, 300, 35);
+        txtName.setBorder(new RoundedBorder(10)); // Giữ lại bo tròn của bạn
+        formPanel.add(txtName);
 
         // Username
-        JLabel SILUser = new JLabel("Tên đăng nhập:");
-        SILUser.setFont(new Font("HelveticaNeue", Font.BOLD, 18));
-        SILUser.setBounds(130, 180, 150, 30);
-        this.add(SILUser);
-        
-        JTextField SITUser = new JTextField();
-        SITUser.setBounds(70, 215, 250, 35);
-        SITUser.setBorder(new RoundedBorder(10));
-        this.add(SITUser);
+        JLabel lblUser = new JLabel("Tài khoản:");
+        lblUser.setFont(labelFont);
+        lblUser.setBounds(50, 190, 100, 30);
+        formPanel.add(lblUser);
+
+        JTextField txtUser = new JTextField();
+        txtUser.setFont(textFont);
+        txtUser.setBounds(160, 190, 300, 35);
+        txtUser.setBorder(new RoundedBorder(10));
+        formPanel.add(txtUser);
 
         // Email
-        JLabel SILEmail = new JLabel("Email:");
-        SILEmail.setFont(new Font("HelveticaNeue", Font.BOLD, 18));
-        SILEmail.setBounds(165, 260, 150, 30);
-        this.add(SILEmail);
-        
-        JTextField SITEmail = new JTextField();
-        SITEmail.setBounds(70, 295, 250, 35);
-        SITEmail.setBorder(new RoundedBorder(10));
-        this.add(SITEmail);
+        JLabel lblEmail = new JLabel("Email:");
+        lblEmail.setFont(labelFont);
+        lblEmail.setBounds(50, 240, 100, 30);
+        formPanel.add(lblEmail);
+
+        JTextField txtEmail = new JTextField();
+        txtEmail.setFont(textFont);
+        txtEmail.setBounds(160, 240, 300, 35);
+        txtEmail.setBorder(new RoundedBorder(10));
+        formPanel.add(txtEmail);
 
         // Password
-        JLabel SILPass = new JLabel("Mật khẩu:");
-        SILPass.setFont(new Font("HelveticaNeue", Font.BOLD, 18));
-        SILPass.setBounds(150, 340, 150, 30);
-        this.add(SILPass);
-        
-        JPasswordField SITPass = new JPasswordField();
-        SITPass.setBounds(70, 375, 250, 35);
-        SITPass.setBorder(new RoundedBorder(10));
-        this.add(SITPass);
+        JLabel lblPass = new JLabel("Mật khẩu:");
+        lblPass.setFont(labelFont);
+        lblPass.setBounds(50, 290, 100, 30);
+        formPanel.add(lblPass);
+
+        JPasswordField txtPass = new JPasswordField();
+        txtPass.setFont(textFont);
+        txtPass.setBounds(160, 290, 300, 35);
+        txtPass.setBorder(new RoundedBorder(10));
+        formPanel.add(txtPass);
 
         
-        // Nút Đăng ký
-        JButton DangKyBtn = new JButton("Đăng Ký Ngay");
-        DangKyBtn.setBackground(Color.WHITE);
-        DangKyBtn.setForeground(Color.BLACK);
-        DangKyBtn.setFont(new Font("HelveticaNeue", Font.BOLD, 14));
-        DangKyBtn.setBounds(70, 440, 250, 40);
-        this.add(DangKyBtn);
+        // Nút Đăng ký 
+        JButton btnRegister = new JButton("Xác nhận đăng ký");
+        btnRegister.setBackground(new Color(32, 178, 170)); 
+        btnRegister.setForeground(Color.WHITE);
+        btnRegister.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        btnRegister.setBounds(160, 350, 300, 45);
+        btnRegister.setFocusable(false);
+        formPanel.add(btnRegister);
 
-        DangKyBtn.addActionListener(e -> {
+        // Nút Quay lại 
+        JButton btnBack = new JButton("Quay lại");
+        btnBack.setBackground(Color.WHITE);
+        btnBack.setForeground(Color.BLACK);
+        btnBack.setBounds(620, 80, 150, 50); 
+        btnBack.setFocusable(false);
+        this.add(btnBack);
+
+
+        // Sự kiện Quay lại
+        btnBack.addActionListener(e -> {
+            frame.showPersonPanel(); 
+        });
+
+        // Sự kiện Đăng ký
+        btnRegister.addActionListener(e -> {
             // Lấy dữ liệu
-            String user_id = new String().trim();
-            String user = SITUser.getText().trim();
-            String name = SITName.getText().trim();
-            String email = SITEmail.getText().trim();
-            String pass = new String(SITPass.getPassword()).trim();
+            String user = txtUser.getText().trim();
+            String name = txtName.getText().trim();
+            String email = txtEmail.getText().trim();
+            String pass = new String(txtPass.getPassword()).trim();
 
-            // Kiểm tra
+            // Validate
             if (user.isEmpty() || email.isEmpty() || name.isEmpty() || pass.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Gọi Database
+            // Database Logic
             dbConnect db = new dbConnect();
             try (Connection conn = db.getConnection()) {
                 if (conn == null) {
@@ -88,54 +140,50 @@ public class SignInPanel extends JPanel {
                     return;
                 }
 
-                // Kiểm tra xem username đã tồn tại chưa
+                // Check trùng username
                 String checkSql = "SELECT username FROM users WHERE username = ?";
                 try (PreparedStatement psCheck = conn.prepareStatement(checkSql)) {
                     psCheck.setString(1, user);
                     if (psCheck.executeQuery().next()) {
-                        JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại!", "Lỗi", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Tài khoản '" + user + "' đã tồn tại!", "Trùng lặp", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
                 }
 
-                // INSERT
+                // Insert
                 String insertSql = "INSERT INTO users (username, email, full_name, password) VALUES (?, ?, ?, ?)";
                 try (PreparedStatement ps = conn.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
                     ps.setString(1, user);
                     ps.setString(2, email);
                     ps.setString(3, name);
-                    ps.setString(4, pass); 
-                    // Nhập vào database
-                    int row = ps.executeUpdate(); 
+                    ps.setString(4, pass);
+
+                    int row = ps.executeUpdate();
                     if (row > 0) {
-                        // user_id
-                        try (var rs = ps.getGeneratedKeys()) {
+                        String newUserId = "";
+                        try (ResultSet rs = ps.getGeneratedKeys()) {
                             if (rs.next()) {
-                                user_id = String.valueOf(rs.getInt(1));
+                                newUserId = String.valueOf(rs.getInt(1));
                             }
                         }
-                        
-                        JOptionPane.showMessageDialog(this, "Đăng ký thành công! Vui lòng đăng nhập.");
-                        
-                        // Xóa trắng các ô nhập liệu
-                        SITUser.setText("");
-                        SITEmail.setText("");
-                        SITName.setText("");
-                        SITPass.setText("");
 
-                        // Insert order for new user
-                        String updateSql = "INSERT INTO average (user_id) VALUES (?)";
-                        try (PreparedStatement psupdate = conn.prepareStatement(updateSql)) {
-                            psupdate.setString(1, user_id);
-                            psupdate.executeUpdate();
+                        // Insert vào bảng Average (Quan trọng)
+                        String kpiSql = "INSERT INTO average (user_id) VALUES (?)";
+                        try (PreparedStatement psKpi = conn.prepareStatement(kpiSql)) {
+                            psKpi.setString(1, newUserId);
+                            psKpi.executeUpdate();
                         }
 
+                        JOptionPane.showMessageDialog(this, "Đăng ký thành công!\nQuay về màn hình thông tin.");
+                        
+                        // QUAN TRỌNG: Quay về PersonPanel ngay sau khi thành công
+                        frame.showPersonPanel();
                     }
                 }
 
             } catch (Exception ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Lỗi Database: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage());
             }
         });
     }

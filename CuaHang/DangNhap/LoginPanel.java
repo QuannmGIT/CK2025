@@ -125,7 +125,7 @@ public class LoginPanel extends JPanel {
         JButton DangNhapBtn = new JButton("Đăng Nhập");
         DangNhapBtn.setFocusable(false);
         DangNhapBtn.setBackground(Color.WHITE);
-        DangNhapBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        DangNhapBtn.setFont(new Font("HelveticaNeue", Font.BOLD, 13));
         DangNhapBtn.setBounds(70, 400, 250, 40);
         DangNhapBtn.setBorder(new RoundedBorder(20));
         this.add(DangNhapBtn);
@@ -168,11 +168,9 @@ public class LoginPanel extends JPanel {
 
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            // Lấy đúng cột 'username' từ database
+                            // Lấy đúng cột username từ database
                             String userDB = rs.getString("username"); 
-                            String fullName = rs.getString("full_name");
 
-                            JOptionPane.showMessageDialog(this, "Xin chào " + fullName);
                             // Mở màn hình MenuFrame
                             new ManageFrame(userDB).setVisible(true);
 
