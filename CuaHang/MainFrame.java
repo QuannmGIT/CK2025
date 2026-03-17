@@ -33,14 +33,13 @@ public class MainFrame extends JFrame {
 
         loginPanel = new LoginPanel(this);
 
-        // Thêm vào container
         rightContainer.add(loginPanel, "LOGIN");
 
         allJPanel.add(rightContainer, BorderLayout.CENTER);
 
     }
 
-    // Hàm chuyển sang Đăng Ký
+
     public void showSignInPanel() {
         CardLayout cl = (CardLayout) rightContainer.getLayout();
         cl.show(rightContainer, "SIGNIN");

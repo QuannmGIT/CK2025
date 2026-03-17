@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -24,7 +23,7 @@ public class BannerPanel extends JPanel {
         textPanel.setOpaque(false); 
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 
-        // 1. HANABI CAFE
+
         JLabel textLabel = new JLabel("HANABI CAFE");
         textLabel.setForeground(Color.BLACK);
         textLabel.setFont(FontLoader.load("Fonts/AmaticSC-Regular.ttf", 70f)); 
@@ -60,7 +59,6 @@ public class BannerPanel extends JPanel {
         textPanel.add(textLabel3);
         textPanel.add(textLabel4);
         textPanel.add(textLabel5);
-        // Khoảng trống dưới cùng
         textPanel.add(Box.createRigidArea(new Dimension(0, 280)));
         textPanel.add(Box.createVerticalGlue());
  

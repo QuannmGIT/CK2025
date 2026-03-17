@@ -10,7 +10,6 @@ public class FontLoader {
             return font;                                                                                                                            
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
-            // Trả về font mặc định
             return FontLoader.load("Fonts/HelveticaNeue.ttf", (int) size);
         }
         

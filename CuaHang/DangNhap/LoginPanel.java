@@ -11,7 +11,7 @@ public class LoginPanel extends JPanel {
         this.setBackground(Color.WHITE);
         this.setLayout(null);
 
-        ImageIcon loginIcon = new ImageIcon(getClass().getResource("/ImageFile/LoginIcon2.png"));
+        ImageIcon loginIcon = new ImageIcon(getClass().getResource("/ImageFile/LoginIcon.png"));
         Image loginImage = loginIcon.getImage();
         Image newLoginImage = loginImage.getScaledInstance(70, 60, java.awt.Image.SCALE_SMOOTH);
         ImageIcon scaledLoginIcon = new ImageIcon(newLoginImage);
@@ -31,22 +31,22 @@ public class LoginPanel extends JPanel {
         titleLabel2.setBounds(70, 130, 300, 40); 
         this.add(titleLabel2);
 
-    //Tạo tài khoảng
 
-        // Label Tài Khoản
+        //Taikhoan
         JLabel TaikhoangLabel = new JLabel("Tài Khoản:");
         TaikhoangLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         TaikhoangLabel.setBounds(147,180, 150, 30);
         this.add(TaikhoangLabel);
        
-        // Tài khoảng JTextField - ô nhập liệu
-        JTextField TaikhoanField = new JTextField();
+    
+        JTextField TaikhoanField = new JTextField("Nhập tài khoản hoặc email");
         TaikhoanField.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        TaikhoanField.setBounds(70, 215, 250, 35); 
+        TaikhoanField.setBounds(70, 215, 250, 35);
+        TaikhoanField.setForeground(Color.GRAY); 
         TaikhoanField.setBorder(new RoundedBorder(10));
         this.add(TaikhoanField);        
 
-        // tạo dòng chữ gợi ý trong ô nhập tài khoản
+
         TaikhoanField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -59,27 +59,28 @@ public class LoginPanel extends JPanel {
             @Override
             public void focusLost(FocusEvent e) {
                 if (TaikhoanField.getText().isEmpty()) {
-                    TaikhoanField.setForeground(Color.GRAY);
                     TaikhoanField.setText("Nhập tài khoản hoặc email");
+                    TaikhoanField.setForeground(Color.GRAY);
                 }
             }
         });
 
 
-    // Tạo mật khẩu
+        //Matkhau
         JLabel MatkhauLabel = new JLabel("Mật Khẩu:");
         MatkhauLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         MatkhauLabel.setBounds(147,270, 150, 30);
         this.add(MatkhauLabel);
 
 
-        JPasswordField MatkhauField = new JPasswordField();
+        JPasswordField MatkhauField = new JPasswordField("123456789");
         MatkhauField.setFont(new Font("Segoe UI", Font.BOLD, 15));
         MatkhauField.setBounds(70, 305, 250, 35);
+        MatkhauField.setForeground(Color.GRAY);
         MatkhauField.setBorder(new RoundedBorder(10));
         this.add(MatkhauField);
 
-        // Tạo dòng chữ gợi ý 
+
         MatkhauField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -94,34 +95,36 @@ public class LoginPanel extends JPanel {
             public void focusLost(FocusEvent e) {
                 String password = new String(MatkhauField.getPassword());
                 if (password.isEmpty()) {
-                    MatkhauField.setForeground(Color.GRAY);
                     MatkhauField.setText("123456789");
+                    MatkhauField.setForeground(Color.GRAY);
                 }
             }
         });
 
-
-    // box tick
+        //Checkbox
         JCheckBox CheckBox = new JCheckBox("Tôi Đồng Ý với điều khoản");
         CheckBox.setFocusable(false);
         CheckBox.setFont(new Font("HelveticaNeue", Font.BOLD, 13));        
         CheckBox.setBackground(Color.WHITE);
         CheckBox.setBounds(70, 360, 250, 25);
         this.add(CheckBox);
-    // Ảnh cho box tick
+
+
         ImageIcon checkIcon = new ImageIcon(getClass().getResource("/ImageFile/CheckIcon.png"));
         Image checkImage = checkIcon.getImage();
         Image newCheckImage = checkImage.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
         ImageIcon scaledCheckIcon = new ImageIcon(newCheckImage);
         CheckBox.setIcon(scaledCheckIcon);
-    // Ảnh khi được chọn
+
+        
         ImageIcon checkedIcon = new ImageIcon(getClass().getResource("/ImageFile/CheckedIcon.png"));
         Image checkedImage = checkedIcon.getImage();
         Image newCheckedImage = checkedImage.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
         ImageIcon scaledCheckedIcon = new ImageIcon(newCheckedImage);
         CheckBox.setSelectedIcon(scaledCheckedIcon);
 
-    // Nút đăng nhập
+
+        //Nut Dang Nhap
         JButton DangNhapBtn = new JButton("Đăng Nhập");
         DangNhapBtn.setFocusable(false);
         DangNhapBtn.setBackground(Color.WHITE);
@@ -131,17 +134,15 @@ public class LoginPanel extends JPanel {
         this.add(DangNhapBtn);
         
 
-
         DangNhapBtn.addActionListener(e -> {
             String user = TaikhoanField.getText().trim();
             String pass = new String(MatkhauField.getPassword()).trim();
 
-            // Xử lý loại bỏ Placeholder
+
             if (user.equals("Nhập tài khoản hoặc email"))  user = "";
             if (pass.equals("123456789")) pass = "";
 
             if (user.isEmpty() || pass.isEmpty()) {
-                // SỬA LỖI: Dùng DNFrame thay vì this
                 JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -168,12 +169,8 @@ public class LoginPanel extends JPanel {
 
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            // Lấy đúng cột username từ database
                             String userDB = rs.getString("username"); 
-
-                            // Mở màn hình MenuFrame
                             new ManageFrame(userDB).setVisible(true);
-
                             this.mainFrame.dispose(); 
                         } else {
                             JOptionPane.showMessageDialog(this, "Sai username hoặc password!", "Lỗi", JOptionPane.ERROR_MESSAGE);
